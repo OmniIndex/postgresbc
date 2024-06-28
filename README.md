@@ -2,14 +2,14 @@
 
 ![alt text](readmeimages/postgresbc_small.png)
 
-+ Getting Started
-+ Users
-+ Drop and Delete Objects
-+ Chains and Schemes
-+ Blocks or Tables
-+ Smart Contracts
-+ Peer-to-Peer Replication
-+ More Information
+- [Getting Started](#getting-started)
+- [Users](#users)
+- [Drop and Delete Objects](#drop-and-delete-objects)
+- [Chains and Schemes](#chains-and-schemas)
+- [Blocks or Tables](#blocks-or-tables)
+- [Smart Contracts](#smart-contracts)
+- [Peer-to-Peer Replication](#peer-to-peer-replication)
+- [More Information](#further-information)
 
 ## Getting started  
 
@@ -17,23 +17,23 @@ Once installed either via the Deb package or within a Docker container, it is un
 
 We will start with an empty PostgresBC instance and then do the following using psql:
 
-+ Log in to psql with the postgres user
-+ Change the password of the postgres user
-+ Initialize PostgresBC without passing a key
-+ Create a new user with login privileges
-+ Alter the user to add a password
-+ Log out with the postgres user and log in with our new user
-+ Create a new Chain to hold our log blocks
-+ Create a new log Block within that Chain
-+ Add data to a Block
-+ Searching in an encrypted object
-+ Conclusion
+- Log in to psql with the postgres user
+- Change the password of the postgres user
+- Initialize PostgresBC without passing a key
+- Create a new user with login privileges
+- Alter the user to add a password
+- Log out with the postgres user and log in with our new user
+- Create a new Chain to hold our log blocks
+- Create a new log Block within that Chain
+- Add data to a Block
+-0 Searching in an encrypted object
+- Conclusion
 
 ### Login to psql with the postgres user
 
 In a command window on a system that has postgres-client installed, type:
 
-```text
+```bash
 sudo -upostgres psql<enter>
 ```
 
@@ -70,12 +70,12 @@ If you have setup a peer network within your /etc/postgresbc.conf file, then all
 Now we will create an initial user. We **should not** use the postgres 'super user' for all of our tasks.
 
 ```SQL
-CREATE ROLE my_awsome_user WITH LOGIN;<enter>
+CREATE ROLE my_awesome_user WITH LOGIN;<enter>
 ```
 
 Once entered, you will see the message:
 
-```TEXT
+```bash
 CREATE ROLE
 ```
 
@@ -84,12 +84,12 @@ CREATE ROLE
 You will now need to add a password.
 
 ```SQL
-ALTER USER my_awsome_user WITH PASSWORD 'my_awsome_password';<enter>
+ALTER USER my_awesome_user WITH PASSWORD 'my_awesome_password';<enter>
 ```
 
 Once entered, PostgresBC will return:
 
-```TEXT
+```bash
 ALTER ROLE
 ```
 
@@ -99,14 +99,14 @@ Now we will log out of psql and log back in as our new user.
 
 To do this, enter the following after the prompt:
 
-```TEXT
+```bash
 \q <enter>
 ```
 
 You should now be back at the command prompt where you need to type:
 
-```TEXT
-psql -Umy_awsome_user -dpostgres<enter>
+```bash
+psql -Umy_awesome_user -dpostgres<enter>
 ```
 
 You will now be prompted for the password, so enter the one you gave the user.
@@ -118,12 +118,12 @@ A chain in PostgresBC is an enhanced postgres Schema. If you are unsure about th
 Here we will be creating a PostgresBC Chain. To do this in your psql command prompt, logged in as your new user type, enter the following:
 
 ```SQL
-CREATE CHAIN IF NOT EXISTS my_awsome_chain<enter>
+CREATE CHAIN IF NOT EXISTS my_awesome_chain<enter>
 ```
 
 After a few seconds you should receive the message:
 
-```TEXT
+```bash
 NOTICE:  Your chain is ready for use.
 ```
 
@@ -132,12 +132,12 @@ NOTICE:  Your chain is ready for use.
 Blocks in PostgresBC are enhanced postgres Tables. To create a Block within the psql window type, enter:
 
 ```SQL
-CREATE BLOCK IF NOT EXISTS my_awsome_chain.my_awsome_logs (logged_date TEXT, called_by TEXT, messageencrypt TEXT, log_file TEXT);<enter>
+CREATE BLOCK IF NOT EXISTS my_awesome_chain.my_awesome_logs (logged_date TEXT, called_by TEXT, messageencrypt TEXT, log_file TEXT);<enter>
 ```
 
 All being well, you will have the message below returned to you:
 
-```TEXT
+```bash
 CREATE TABLE
 ```
 
@@ -151,21 +151,21 @@ You will instantly see that there are far more objects (fields) in place than th
 
 If we break these down:  
 
-+ messagesearchable
-+ message_pgbc
+- messagesearchable
+- message_pgbc
 
 These are the messageencrypt objects. When you append the word encrypt to an object name, you are instructing PostgresBC to encrypt all data that is sent to the object. These two enable you to view (Only if you have INSERT, UPDATE & SELECT privileges) and Search (Only if you have SELECT privileges).  
 
-+ hash
-+ priorhash
+- hash
+- priorhash
 
 These hold a unique hash for this object and also the hash of the object inserted directly before this one.
 
-+ oidxid
+- oidxid
 
 This is a unique serial identifier for the Block
 
-+ ai_*
+- ai_*
 
 These hold the AI descriptors for this Block based on the Boudica AI thesauruses that have been placed in the Chain.
 
@@ -176,7 +176,7 @@ As you saw in the creation of a block, we added an object that holds encrypted d
 In the psql command window, type:
 
 ```SQL
-INSERT INTO my_awsome_chain.my_awsome_logs (logged_date, called_by, message_encrypt, log_file) VALUES
+INSERT INTO my_awesome_chain.my_awesome_logs (logged_date, called_by, message_encrypt, log_file) VALUES
 ('06-26-2024 08-38', 'Tutorial', 'This is a small block of text that simon has added for the tutorial', 'README');<enter>
 ```
 
@@ -184,31 +184,31 @@ This will probably not give you the response that you were expecting! As stated 
 
 While you have CREATE privileges on your Chain, you do not yet have any access privileges. To do this, you will need to log out of psql
 
-```TEXT
+```bash
 \q<enter>
 ```
 
 And log back in as the postgres user
 
-```TEXT
+```bash
 su -u postgres psql<enter>
 ```
 
 Now you are able to set privileges on the data structure.
 
-For this tutorial, we will give my_awsome_user all privileges on the Block.
+For this tutorial, we will give my_awesome_user all privileges on the Block.
 
 ```SQL
-GRANT SELECT, INSERT, UPDATE ON my_awsome_chain.my_awsome_logs TO my_awsome_user;<enter>
+GRANT SELECT, INSERT, UPDATE ON my_awesome_chain.my_awesome_logs TO my_awesome_user;<enter>
 ```
 
 You will then be returned with:
 
-```TEXT
+```bash
 GRANT
 ```
 
-Now log back in as my_awsome_user.
+Now log back in as my_awesome_user.
 
 When you are at the logged in command prompt, up arrow until you see the insert command and then press the enter key. This should return:
 
@@ -223,7 +223,7 @@ If it does not, you will see an error stating where there has been an issue with
 Return to PGAdmin and open up a query tool (Right hand mouse click on the Block). In the query tool type:
 
 ```SQL
-SELECT hash, message_pgbc, messagesearchable FROM my_awsome_chain.my_awsome_logs;
+SELECT hash, message_pgbc, messagesearchable FROM my_awesome_chain.my_awesome_logs;
 ```
 
 Press the Run button and you will be presented with the results.
@@ -235,7 +235,7 @@ The postgres user is unable to view this data as by default they do not have ful
 Back in your psql command window type:
 
 ```SQL
-SELECT hash FROM my_awsome_chain.my_awsome_logs;<return>
+SELECT hash FROM my_awesome_chain.my_awesome_logs;<return>
 ```
 
 You will see that you can return this object.
@@ -243,7 +243,7 @@ You will see that you can return this object.
 Now let us return an encrypted object. To do this, type:
 
 ```SQL
-SELECT * FROM my_awsome_chain.my_awsome_logs;<enter>
+SELECT * FROM my_awesome_chain.my_awesome_logs;<enter>
 ```
 
 You will be returned with a CSV output from your search with the encrypted data shown in plain text.
@@ -253,27 +253,27 @@ Next we will do two more searches. The first bringing back the hash using a sear
 For the first search type:
 
 ```SQL
-SELECT hash FROM my_awsome_chain.my_awsome_logs WHERE { my_awsome_chain.my_awsome_logs.messageencrypt LIKE '%of text%' };<enter>
+SELECT hash FROM my_awesome_chain.my_awesome_logs WHERE { my_awesome_chain.my_awesome_logs.messageencrypt LIKE '%of text%' };<enter>
 ```
 
 For the second type:
 
 ```SQL
-SELECT hash FROM my_awsome_chain.my_awsome_logs WHERE { my_awsome_chain.my_awsome_logs.messageencrypt LIKE '%not in here%' };
+SELECT hash FROM my_awesome_chain.my_awesome_logs WHERE { my_awesome_chain.my_awesome_logs.messageencrypt LIKE '%not in here%' };
 ```
 
 Before we look at the return, let me explain the query.  
 
-+ Dot notation for blocks and tables
+- Dot notation for blocks and tables
 
-With PostgresBC, whenever we are dealing with tables or blocks we must allways provide the full path. So here we have the Chain 'my_awsome_chain' then a . followed by the block name 'my_awsome_logs
+With PostgresBC, whenever we are dealing with tables or blocks we must allways provide the full path. So here we have the Chain 'my_awesome_chain' then a . followed by the block name 'my_awesome_logs
 
-+ Dot notation on encrypted objects
+- Dot notation on encrypted objects
 
 If we want to place a WHERE clause on an encrypted object then we need to add the OIDXQL language additions. These are: 
 
-+ Surrounding the clause with curly braces {}
-+ Full . notation on the object names Chain/Schema.Block/Table.Object
+- Surrounding the clause with curly braces {}
+- Full . notation on the object names Chain/Schema.Block/Table.Object
 
 In the following image you will see my returned output. The first query gives me a result, while the second is empty. This is because the fiirst query found the text 'of text' within the messageencrypt object, while the second searched for 'not in here' which is not in the object.  
 
@@ -338,7 +338,7 @@ This will automatically trigger the smart contract script.
 
 This happens automatically if the node details are placed into the postgresbc.conf file, which can be found in the /etc folder. The make up of peer nodes is:  
 
-```TEXT
+```bash
 node0 <address>  
 node0port <port>  
 node0user <username>  
